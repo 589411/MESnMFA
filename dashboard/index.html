@@ -126,7 +126,7 @@
         /* 站點卡片 */
         .stations-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(7, 1fr);
             gap: 1rem;
         }
 
@@ -425,7 +425,7 @@
     <header class="header">
         <h1>🏭 MES + MFA 物質流分析系統</h1>
         <div class="status">
-            <span class="status-badge status-normal" id="normalCount">正常: 28</span>
+            <span class="status-badge status-normal" id="normalCount">正常: 33</span>
             <span class="status-badge status-critical" id="anomalyCount">異常: 2</span>
         </div>
     </header>
@@ -520,54 +520,66 @@
         // ============================================================
         // 模擬數據
         // ============================================================
+        // 更新後的流程：A → B → 分流 → C_CG/C_P(平行加水,加水3倍) → D_CG/D_P(平行脫水) → E(合流)
         const productionData = [
+            // B001
             {date: '2024-01-01', batch: 'B001', station: 'A', owner: 'Mixed', input: 1000, remnantIn: 0, water: 0, output: 980, remnantOut: 15, waste: 5, rate: 0.980, status: 'Normal'},
             {date: '2024-01-01', batch: 'B001', station: 'B', owner: 'CG_Corp', input: 980, remnantIn: 0, water: 0, output: 950, remnantOut: 20, waste: 10, rate: 0.969, status: 'Normal'},
-            {date: '2024-01-01', batch: 'B001', station: 'C', owner: 'Mixed', input: 950, remnantIn: 0, water: 240, output: 1180, remnantOut: 25, waste: 5, rate: 0.992, status: 'Normal'},
-            {date: '2024-01-01', batch: 'B001', station: 'D_CG', owner: 'CG_Corp', input: 590, remnantIn: 0, water: 0, output: 420, remnantOut: 18, waste: 8, rate: 0.712, status: 'Normal'},
-            {date: '2024-01-01', batch: 'B001', station: 'D_P', owner: 'P_Corp', input: 590, remnantIn: 0, water: 0, output: 415, remnantOut: 15, waste: 10, rate: 0.703, status: 'Normal'},
-            {date: '2024-01-01', batch: 'B001', station: 'E', owner: 'Mixed', input: 835, remnantIn: 0, water: 0, output: 450, remnantOut: 12, waste: 8, rate: 0.539, status: 'Normal'},
+            {date: '2024-01-01', batch: 'B001', station: 'C_CG', owner: 'CG_Corp', input: 475, remnantIn: 0, water: 1425, output: 1870, remnantOut: 30, waste: 10, rate: 0.984, status: 'Normal'},
+            {date: '2024-01-01', batch: 'B001', station: 'C_P', owner: 'P_Corp', input: 475, remnantIn: 0, water: 1425, output: 1865, remnantOut: 28, waste: 12, rate: 0.981, status: 'Normal'},
+            {date: '2024-01-01', batch: 'B001', station: 'D_CG', owner: 'CG_Corp', input: 1870, remnantIn: 0, water: 0, output: 480, remnantOut: 25, waste: 15, rate: 0.257, status: 'Normal'},
+            {date: '2024-01-01', batch: 'B001', station: 'D_P', owner: 'P_Corp', input: 1865, remnantIn: 0, water: 0, output: 475, remnantOut: 22, waste: 18, rate: 0.255, status: 'Normal'},
+            {date: '2024-01-01', batch: 'B001', station: 'E', owner: 'Mixed', input: 955, remnantIn: 0, water: 0, output: 450, remnantOut: 12, waste: 8, rate: 0.471, status: 'Normal'},
             
+            // B002
             {date: '2024-01-02', batch: 'B002', station: 'A', owner: 'Mixed', input: 1000, remnantIn: 15, water: 0, output: 990, remnantOut: 18, waste: 7, rate: 0.975, status: 'Normal'},
             {date: '2024-01-02', batch: 'B002', station: 'B', owner: 'CG_Corp', input: 990, remnantIn: 20, water: 0, output: 975, remnantOut: 22, waste: 13, rate: 0.966, status: 'Normal'},
-            {date: '2024-01-02', batch: 'B002', station: 'C', owner: 'Mixed', input: 975, remnantIn: 25, water: 260, output: 1250, remnantOut: 28, waste: 7, rate: 0.972, status: 'Normal'},
-            {date: '2024-01-02', batch: 'B002', station: 'D_CG', owner: 'CG_Corp', input: 625, remnantIn: 18, water: 0, output: 455, remnantOut: 20, waste: 10, rate: 0.708, status: 'Normal'},
-            {date: '2024-01-02', batch: 'B002', station: 'D_P', owner: 'P_Corp', input: 625, remnantIn: 15, water: 0, output: 450, remnantOut: 17, waste: 12, rate: 0.703, status: 'Normal'},
-            {date: '2024-01-02', batch: 'B002', station: 'E', owner: 'Mixed', input: 905, remnantIn: 12, water: 0, output: 485, remnantOut: 14, waste: 10, rate: 0.529, status: 'Normal'},
+            {date: '2024-01-02', batch: 'B002', station: 'C_CG', owner: 'CG_Corp', input: 488, remnantIn: 30, water: 1464, output: 1948, remnantOut: 35, waste: 12, rate: 0.983, status: 'Normal'},
+            {date: '2024-01-02', batch: 'B002', station: 'C_P', owner: 'P_Corp', input: 487, remnantIn: 28, water: 1461, output: 1940, remnantOut: 32, waste: 14, rate: 0.982, status: 'Normal'},
+            {date: '2024-01-02', batch: 'B002', station: 'D_CG', owner: 'CG_Corp', input: 1948, remnantIn: 25, water: 0, output: 510, remnantOut: 28, waste: 18, rate: 0.258, status: 'Normal'},
+            {date: '2024-01-02', batch: 'B002', station: 'D_P', owner: 'P_Corp', input: 1940, remnantIn: 22, water: 0, output: 502, remnantOut: 25, waste: 20, rate: 0.256, status: 'Normal'},
+            {date: '2024-01-02', batch: 'B002', station: 'E', owner: 'Mixed', input: 1012, remnantIn: 12, water: 0, output: 485, remnantOut: 14, waste: 10, rate: 0.474, status: 'Normal'},
             
+            // B003 - 異常批次
             {date: '2024-01-03', batch: 'B003', station: 'A', owner: 'Mixed', input: 1000, remnantIn: 18, water: 0, output: 985, remnantOut: 20, waste: 13, rate: 0.968, status: 'Normal'},
             {date: '2024-01-03', batch: 'B003', station: 'B', owner: 'CG_Corp', input: 985, remnantIn: 22, water: 0, output: 970, remnantOut: 25, waste: 12, rate: 0.963, status: 'Normal'},
-            {date: '2024-01-03', batch: 'B003', station: 'C', owner: 'Mixed', input: 970, remnantIn: 28, water: 250, output: 1240, remnantOut: 30, waste: 8, rate: 0.970, status: 'Normal'},
-            {date: '2024-01-03', batch: 'B003', station: 'D_CG', owner: 'CG_Corp', input: 620, remnantIn: 20, water: 0, output: 520, remnantOut: 22, waste: 6, rate: 0.813, status: 'Anomaly_High'},
-            {date: '2024-01-03', batch: 'B003', station: 'D_P', owner: 'P_Corp', input: 620, remnantIn: 18, water: 0, output: 445, remnantOut: 18, waste: 11, rate: 0.697, status: 'Normal'},
-            {date: '2024-01-03', batch: 'B003', station: 'E', owner: 'Mixed', input: 965, remnantIn: 14, water: 0, output: 560, remnantOut: 16, waste: 9, rate: 0.572, status: 'Anomaly_High'},
+            {date: '2024-01-03', batch: 'B003', station: 'C_CG', owner: 'CG_Corp', input: 485, remnantIn: 35, water: 1455, output: 1942, remnantOut: 38, waste: 10, rate: 0.983, status: 'Normal'},
+            {date: '2024-01-03', batch: 'B003', station: 'C_P', owner: 'P_Corp', input: 485, remnantIn: 32, water: 1455, output: 1938, remnantOut: 35, waste: 12, rate: 0.982, status: 'Normal'},
+            {date: '2024-01-03', batch: 'B003', station: 'D_CG', owner: 'CG_Corp', input: 1942, remnantIn: 28, water: 0, output: 620, remnantOut: 30, waste: 8, rate: 0.319, status: 'Anomaly_High'},
+            {date: '2024-01-03', batch: 'B003', station: 'D_P', owner: 'P_Corp', input: 1938, remnantIn: 25, water: 0, output: 498, remnantOut: 27, waste: 18, rate: 0.257, status: 'Normal'},
+            {date: '2024-01-03', batch: 'B003', station: 'E', owner: 'Mixed', input: 1118, remnantIn: 14, water: 0, output: 580, remnantOut: 16, waste: 9, rate: 0.512, status: 'Anomaly_High'},
             
+            // B004
             {date: '2024-01-04', batch: 'B004', station: 'A', owner: 'Mixed', input: 1000, remnantIn: 20, water: 0, output: 988, remnantOut: 17, waste: 15, rate: 0.969, status: 'Normal'},
             {date: '2024-01-04', batch: 'B004', station: 'B', owner: 'CG_Corp', input: 988, remnantIn: 25, water: 0, output: 978, remnantOut: 23, waste: 12, rate: 0.965, status: 'Normal'},
-            {date: '2024-01-04', batch: 'B004', station: 'C', owner: 'Mixed', input: 978, remnantIn: 30, water: 250, output: 1248, remnantOut: 27, waste: 8, rate: 0.972, status: 'Normal'},
-            {date: '2024-01-04', batch: 'B004', station: 'D_CG', owner: 'CG_Corp', input: 624, remnantIn: 22, water: 0, output: 448, remnantOut: 19, waste: 9, rate: 0.693, status: 'Normal'},
-            {date: '2024-01-04', batch: 'B004', station: 'D_P', owner: 'P_Corp', input: 624, remnantIn: 16, water: 0, output: 452, remnantOut: 16, waste: 10, rate: 0.706, status: 'Normal'},
-            {date: '2024-01-04', batch: 'B004', station: 'E', owner: 'Mixed', input: 900, remnantIn: 16, water: 0, output: 478, remnantOut: 13, waste: 9, rate: 0.522, status: 'Normal'},
+            {date: '2024-01-04', batch: 'B004', station: 'C_CG', owner: 'CG_Corp', input: 489, remnantIn: 38, water: 1467, output: 1960, remnantOut: 36, waste: 13, rate: 0.983, status: 'Normal'},
+            {date: '2024-01-04', batch: 'B004', station: 'C_P', owner: 'P_Corp', input: 489, remnantIn: 35, water: 1467, output: 1955, remnantOut: 33, waste: 15, rate: 0.981, status: 'Normal'},
+            {date: '2024-01-04', batch: 'B004', station: 'D_CG', owner: 'CG_Corp', input: 1960, remnantIn: 30, water: 0, output: 505, remnantOut: 26, waste: 14, rate: 0.254, status: 'Normal'},
+            {date: '2024-01-04', batch: 'B004', station: 'D_P', owner: 'P_Corp', input: 1955, remnantIn: 27, water: 0, output: 508, remnantOut: 24, waste: 16, rate: 0.257, status: 'Normal'},
+            {date: '2024-01-04', batch: 'B004', station: 'E', owner: 'Mixed', input: 1013, remnantIn: 16, water: 0, output: 490, remnantOut: 13, waste: 9, rate: 0.477, status: 'Normal'},
             
+            // B005
             {date: '2024-01-05', batch: 'B005', station: 'A', owner: 'Mixed', input: 1000, remnantIn: 17, water: 0, output: 985, remnantOut: 19, waste: 13, rate: 0.969, status: 'Normal'},
             {date: '2024-01-05', batch: 'B005', station: 'B', owner: 'CG_Corp', input: 985, remnantIn: 23, water: 0, output: 972, remnantOut: 21, waste: 15, rate: 0.964, status: 'Normal'},
-            {date: '2024-01-05', batch: 'B005', station: 'C', owner: 'Mixed', input: 972, remnantIn: 27, water: 250, output: 1234, remnantOut: 26, waste: 9, rate: 0.969, status: 'Normal'},
-            {date: '2024-01-05', batch: 'B005', station: 'D_CG', owner: 'CG_Corp', input: 617, remnantIn: 19, water: 0, output: 438, remnantOut: 17, waste: 11, rate: 0.689, status: 'Normal'},
-            {date: '2024-01-05', batch: 'B005', station: 'D_P', owner: 'P_Corp', input: 617, remnantIn: 17, water: 0, output: 440, remnantOut: 15, waste: 13, rate: 0.694, status: 'Normal'},
-            {date: '2024-01-05', batch: 'B005', station: 'E', owner: 'Mixed', input: 878, remnantIn: 13, water: 0, output: 470, remnantOut: 11, waste: 8, rate: 0.528, status: 'Normal'}
+            {date: '2024-01-05', batch: 'B005', station: 'C_CG', owner: 'CG_Corp', input: 486, remnantIn: 36, water: 1458, output: 1945, remnantOut: 34, waste: 14, rate: 0.982, status: 'Normal'},
+            {date: '2024-01-05', batch: 'B005', station: 'C_P', owner: 'P_Corp', input: 486, remnantIn: 33, water: 1458, output: 1940, remnantOut: 31, waste: 16, rate: 0.980, status: 'Normal'},
+            {date: '2024-01-05', batch: 'B005', station: 'D_CG', owner: 'CG_Corp', input: 1945, remnantIn: 26, water: 0, output: 498, remnantOut: 24, waste: 17, rate: 0.253, status: 'Normal'},
+            {date: '2024-01-05', batch: 'B005', station: 'D_P', owner: 'P_Corp', input: 1940, remnantIn: 24, water: 0, output: 495, remnantOut: 22, waste: 19, rate: 0.252, status: 'Normal'},
+            {date: '2024-01-05', batch: 'B005', station: 'E', owner: 'Mixed', input: 993, remnantIn: 13, water: 0, output: 475, remnantOut: 11, waste: 8, rate: 0.472, status: 'Normal'}
         ];
 
         const stationConfig = {
-            'A': {name: '收料站', expectedRate: 0.97, color: '#9b59b6'},
-            'B': {name: '前處理站', expectedRate: 0.965, color: '#e67e22'},
-            'C': {name: '分流加水站', expectedRate: 0.97, color: '#9b59b6'},
-            'D_CG': {name: 'CG脫水站', expectedRate: 0.70, color: '#e67e22'},
-            'D_P': {name: 'P脫水站', expectedRate: 0.70, color: '#27ae60'},
-            'E': {name: '混合成品站', expectedRate: 0.53, color: '#9b59b6'}
+            'A': {name: '收料站', expectedRate: 0.97, color: '#9b59b6', owner: 'Mixed'},
+            'B': {name: '前處理站', expectedRate: 0.965, color: '#e67e22', owner: 'CG'},
+            'C_CG': {name: 'CG加水站', expectedRate: 0.98, color: '#e67e22', owner: 'CG'},
+            'C_P': {name: 'P加水站', expectedRate: 0.98, color: '#27ae60', owner: 'P'},
+            'D_CG': {name: 'CG脫水站', expectedRate: 0.26, color: '#e67e22', owner: 'CG'},
+            'D_P': {name: 'P脫水站', expectedRate: 0.26, color: '#27ae60', owner: 'P'},
+            'E': {name: '混合成品站', expectedRate: 0.47, color: '#9b59b6', owner: 'Mixed'}
         };
 
         const batches = ['B001', 'B002', 'B003', 'B004', 'B005'];
-        const stations = ['A', 'B', 'C', 'D_CG', 'D_P', 'E'];
+        const stations = ['A', 'B', 'C_CG', 'C_P', 'D_CG', 'D_P', 'E'];
 
         let selectedBatch = 'B003';
         let selectedStation = 'D_CG';
@@ -605,45 +617,48 @@
 
             const flowchartDef = `
             graph LR
-                subgraph 原料來源
-                    M[("🏭 母公司 M")]
-                    P_in[("🏭 P公司")]
+                subgraph 原料來源["🏭 原料來源"]
+                    M[("母公司 M")]
+                    P_in[("P公司供料")]
                 end
                 
-                subgraph 站點A[收料站 A]
+                subgraph 站點A["站點 A - 收料"]
                     A[混合原料<br/>轉換率 97%]
                 end
                 
-                subgraph 站點B[前處理站 B - CG]
+                subgraph 站點B["站點 B - 前處理 (CG公司)"]
                     B[前處理<br/>轉換率 96.5%]
                 end
                 
-                subgraph 站點C[分流加水站 C]
-                    C[加水+分流<br/>轉換率 97%]
+                subgraph 平行加水["站點 C - 平行加水 (加水3倍)"]
+                    C_CG["CG公司加水<br/>轉換率 98%"]
+                    C_P["P公司加水<br/>轉換率 98%"]
                 end
                 
-                subgraph 平行加工[站點 D - 平行加工]
-                    D_CG[CG脫水<br/>轉換率 70%]
-                    D_P[P脫水<br/>轉換率 70%]
+                subgraph 平行脫水["站點 D - 平行脫水"]
+                    D_CG["CG公司脫水<br/>轉換率 26%"]
+                    D_P["P公司脫水<br/>轉換率 26%"]
                 end
                 
-                subgraph 站點E[混合成品站 E]
-                    E[混合脫水<br/>轉換率 53%]
+                subgraph 站點E["站點 E - 混合成品"]
+                    E[混合脫水<br/>轉換率 47%]
                 end
                 
                 M --> A
                 P_in --> A
                 A --> B
-                B --> C
-                C -->|分流至CG| D_CG
-                C -->|分流至P| D_P
+                B -->|分流至CG| C_CG
+                B -->|分流至P| C_P
+                C_CG -->|"+3倍水"| D_CG
+                C_P -->|"+3倍水"| D_P
                 D_CG --> E
                 D_P --> E
-                E --> 成品[📦 成品粉末]
+                E --> 成品["📦 成品粉末"]
                 
                 A -.->|餘料| A
                 B -.->|餘料| B
-                C -.->|餘料| C
+                C_CG -.->|餘料| C_CG
+                C_P -.->|餘料| C_P
                 D_CG -.->|餘料| D_CG
                 D_P -.->|餘料| D_P
                 E -.->|餘料| E

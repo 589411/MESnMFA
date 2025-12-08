@@ -31,13 +31,15 @@ class StationConfig:
 
 
 # 各站點歷史平均轉換率（從數據中學習得到）
+# 流程：A → B → 分流 → C_CG/C_P(平行加水) → D_CG/D_P(平行脫水) → E(合流)
 STATION_CONFIGS = {
     'A': StationConfig('收料站', 0.97, 2.0),
     'B': StationConfig('前處理站', 0.965, 2.0),
-    'C': StationConfig('分流加水站', 0.97, 2.0, adds_water=True),
-    'D_CG': StationConfig('CG脫水站', 0.70, 2.0),
-    'D_P': StationConfig('P脫水站', 0.70, 2.0),
-    'E': StationConfig('混合成品站', 0.53, 2.0),
+    'C_CG': StationConfig('CG加水站', 0.98, 2.0, adds_water=True),  # CG公司加水站
+    'C_P': StationConfig('P加水站', 0.98, 2.0, adds_water=True),    # P公司加水站
+    'D_CG': StationConfig('CG脫水站', 0.26, 2.0),  # 加水3倍後脫水，轉換率約 1/4
+    'D_P': StationConfig('P脫水站', 0.26, 2.0),    # 加水3倍後脫水，轉換率約 1/4
+    'E': StationConfig('混合成品站', 0.47, 2.0),
 }
 
 
