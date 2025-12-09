@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCL 樹脂配方預測模型 - 昱鐳科技 Demo</title>
+    <title>CCL 樹脂配方預測模型 - AI Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -25,9 +25,9 @@
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
-                    <span class="text-white font-bold text-xl">Y</span>
+                    <span class="text-white font-bold text-xl">C</span>
                 </div>
-                <span class="font-bold text-xl text-gray-800">昱鐳科技 CCL 配方預測</span>
+                <span class="font-bold text-xl text-gray-800">CCL 配方 AI 預測系統</span>
             </div>
             <div class="hidden md:flex space-x-4 text-sm">
                 <a href="#overview" class="text-gray-600 hover:text-indigo-600">專案概述</a>
@@ -70,7 +70,7 @@
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="card">
                     <h3 class="text-lg font-bold text-indigo-600 mb-3">🎯 專案目標</h3>
-                    <p class="text-gray-600 mb-4">針對昱鐳科技的 CCL 樹脂配方開發，建立 AI 預測模型：</p>
+                    <p class="text-gray-600 mb-4">針對 CCL 樹脂配方開發，建立 AI 預測模型：</p>
                     <ul class="space-y-2 text-gray-700">
                         <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span><strong>正向預測</strong>：輸入配方 → 預測 Dk, Df, Peel, Tg, CTE</span></li>
                         <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span><strong>反向設計</strong>：輸入目標規格 → 搜尋最佳配方</span></li>
@@ -418,7 +418,7 @@
                 <h3 class="text-lg font-bold text-orange-600 mb-3">⚠️ 重要說明：數據格式可完全客製化</h3>
                 <p class="text-gray-700 mb-4">
                     上述的數據欄位和樹脂系統都是<strong class="text-orange-600">假設範例</strong>。
-                    實際導入時，我們會根據昱鐳的真實數據進行調整：
+                    實際導入時，我們會根據貴公司的真實數據進行調整：
                 </p>
                 
                 <div class="grid md:grid-cols-2 gap-6">
@@ -427,7 +427,7 @@
                         <ul class="text-sm text-gray-600 space-y-2">
                             <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>輸入欄位</strong>：可以是任何配方參數 (原料比例、製程條件等)</li>
                             <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>輸出欄位</strong>：可以是任何物理性質 (不限於 Dk/Df/Peel/Tg/CTE)</li>
-                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>欄位名稱</strong>：可使用昱鐳內部的命名慣例</li>
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>欄位名稱</strong>：可使用貴公司內部的命名慣例</li>
                             <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>單位</strong>：可根據實際量測單位調整</li>
                             <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>樹脂系統</strong>：不限於環氧/Active Ester，任何樹脂系統皆可</li>
                         </ul>
@@ -448,7 +448,7 @@
                 <div class="mt-4 bg-green-50 border-l-4 border-green-500 p-4">
                     <p class="text-green-800">
                         <strong>💡 流程：</strong>
-                        昱鐳提供原始數據 → 我們進行欄位對應和轉換 → 建立專屬預測模型 → 交付可用系統
+                        貴公司提供原始數據 → 我們進行欄位對應和轉換 → 建立專屬預測模型 → 交付可用系統
                     </p>
                 </div>
             </div>
@@ -456,13 +456,13 @@
             <!-- Example Mapping -->
             <div class="card mb-6">
                 <h3 class="text-lg font-bold text-indigo-600 mb-3">🔗 欄位對應範例</h3>
-                <p class="text-gray-600 mb-4">假設昱鐳的數據欄位與我們的假設不同，對應方式如下：</p>
+                <p class="text-gray-600 mb-4">假設貴公司的數據欄位與我們的假設不同，對應方式如下：</p>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="table-header">
                             <tr>
-                                <th class="px-4 py-2 text-left">昱鐳原始欄位 (範例)</th>
+                                <th class="px-4 py-2 text-left">貴公司原始欄位 (範例)</th>
                                 <th class="px-4 py-2 text-center">→</th>
                                 <th class="px-4 py-2 text-left">模型欄位</th>
                                 <th class="px-4 py-2 text-left">說明</th>
@@ -519,7 +519,7 @@
                         <div class="step-number mr-4 flex-shrink-0">1</div>
                         <div class="flex-1">
                             <h4 class="font-bold text-gray-800">準備實驗數據 (Excel/CSV)</h4>
-                            <p class="text-gray-600 mt-1">將昱鐳的實驗數據整理成以下格式：</p>
+                            <p class="text-gray-600 mt-1">將貴公司的實驗數據整理成以下格式：</p>
                             <div class="code-block mt-2">
 Experiment_ID,Hardener_Eq_Ratio,Filler_Vol_Pct,FR_Wt_Pct,Toughener_Wt_Pct,Wash_Cycles,Residual_Cl_ppm,Dk_10GHz,Df_10GHz,Peel_Strength_N_mm,Tg_C,CTE_ppm
 YL001,0.95,35,5,2,4,15,3.45,0.008,0.85,165,32
@@ -547,7 +547,7 @@ YL003,0.90,30,6,4,4,12,3.52,0.009,0.92,158,38
 <span style="color:#6b7280"># 原本 (模擬數據)</span>
 predictor.load_data('data/ccl_resin_simulation.csv')
 
-<span style="color:#6b7280"># 改成 (昱鐳實際數據)</span>
+<span style="color:#6b7280"># 改成 (貴公司實際數據)</span>
 predictor.load_data('data/yulei_experiment_data.csv')
                             </div>
                         </div>
@@ -565,7 +565,7 @@ from models.predictor import CCLPredictor
 <span style="color:#6b7280"># 建立預測器</span>
 predictor = CCLPredictor()
 
-<span style="color:#6b7280"># 載入昱鐳數據</span>
+<span style="color:#6b7280"># 載入貴公司數據</span>
 predictor.load_data('data/yulei_experiment_data.csv')
 
 <span style="color:#6b7280"># 訓練模型</span>
@@ -636,7 +636,7 @@ print(best)
             <!-- Data Template Download -->
             <div class="card mt-6">
                 <h3 class="text-lg font-bold text-indigo-600 mb-3">📥 數據模板</h3>
-                <p class="text-gray-600 mb-4">請使用以下模板整理昱鐳的實驗數據：</p>
+                <p class="text-gray-600 mb-4">請使用以下模板整理貴公司的實驗數據：</p>
                 <button onclick="downloadTemplate()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     下載 CSV 模板
@@ -659,7 +659,7 @@ print(best)
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-400 py-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>CCL 樹脂配方預測模型 Demo - 昱鐳科技</p>
+            <p>CCL 樹脂配方預測模型 Demo</p>
             <p class="text-sm mt-2">Powered by Machine Learning (Random Forest / XGBoost)</p>
         </div>
     </footer>
