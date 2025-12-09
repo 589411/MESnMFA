@@ -35,6 +35,7 @@
                 <a href="#model" class="text-gray-600 hover:text-indigo-600">模型訓練</a>
                 <a href="#results" class="text-gray-600 hover:text-indigo-600">優化結果</a>
                 <a href="#import" class="text-gray-600 hover:text-indigo-600">導入指南</a>
+                <a href="#workflow" class="text-gray-600 hover:text-indigo-600 font-medium text-indigo-600">合作流程</a>
             </div>
         </div>
     </nav>
@@ -644,14 +645,100 @@ print(best)
             </div>
         </section>
 
+        <!-- Workflow -->
+        <section id="workflow" class="card">
+            <h2 class="section-title">合作流程：從 Demo 到實際預測模型</h2>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                <p class="text-blue-800">
+                    <strong>核心理念：</strong>目前展示的是基於模擬數據的 Demo。
+                    真正的價值在於<strong>用貴公司的實際實驗數據</strong>訓練出專屬的預測模型。
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-4">
+                <!-- Phase 1 -->
+                <div class="bg-gray-100 rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">1</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Demo 展示</h4>
+                    <p class="text-sm text-gray-600">用模擬數據展示 AI 配方預測的可行性和價值</p>
+                    <div class="mt-2 text-xs text-indigo-600">← 目前階段</div>
+                </div>
+                
+                <!-- Phase 2 -->
+                <div class="bg-gray-100 rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">2</div>
+                    <h4 class="font-bold text-gray-800 mb-2">數據收集</h4>
+                    <p class="text-sm text-gray-600">貴公司提供歷史實驗數據 (配方 + 物性測試結果)</p>
+                    <div class="mt-2 text-xs text-gray-500">建議 50+ 筆</div>
+                </div>
+                
+                <!-- Phase 3 -->
+                <div class="bg-gray-100 rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">3</div>
+                    <h4 class="font-bold text-gray-800 mb-2">模型訓練</h4>
+                    <p class="text-sm text-gray-600">用實際數據訓練專屬預測模型，評估準確度</p>
+                    <div class="mt-2 text-xs text-gray-500">R² > 0.8 為佳</div>
+                </div>
+                
+                <!-- Phase 4 -->
+                <div class="bg-gray-100 rounded-lg p-4 text-center">
+                    <div class="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">4</div>
+                    <h4 class="font-bold text-gray-800 mb-2">迭代優化</h4>
+                    <p class="text-sm text-gray-600">AI 推薦配方 → 實驗驗證 → 數據回饋 → 模型更新</p>
+                    <div class="mt-2 text-xs text-gray-500">持續改進</div>
+                </div>
+            </div>
+            
+            <!-- Iteration Diagram -->
+            <div class="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+                <h4 class="font-bold text-gray-800 mb-4 text-center">🔄 迭代優化循環</h4>
+                <div class="flex flex-wrap items-center justify-center gap-2 text-sm">
+                    <div class="bg-green-500 text-white px-4 py-2 rounded-lg">AI 推薦新配方</div>
+                    <div class="text-gray-400">→</div>
+                    <div class="bg-blue-500 text-white px-4 py-2 rounded-lg">實驗室驗證</div>
+                    <div class="text-gray-400">→</div>
+                    <div class="bg-purple-500 text-white px-4 py-2 rounded-lg">測試物性數據</div>
+                    <div class="text-gray-400">→</div>
+                    <div class="bg-orange-500 text-white px-4 py-2 rounded-lg">數據加入訓練集</div>
+                    <div class="text-gray-400">→</div>
+                    <div class="bg-indigo-500 text-white px-4 py-2 rounded-lg">模型更新</div>
+                    <div class="text-gray-400">→</div>
+                    <div class="text-green-600 font-bold">循環</div>
+                </div>
+                <p class="text-center text-gray-600 mt-4 text-sm">
+                    每次迭代，模型都會學習新的配方-物性關係，預測越來越準確
+                </p>
+            </div>
+            
+            <!-- Expected Outcome -->
+            <div class="mt-6 grid md:grid-cols-2 gap-4">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 class="font-bold text-green-700 mb-2">✅ 預期效益</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• 減少 50-70% 的試錯實驗次數</li>
+                        <li>• 縮短新配方開發週期</li>
+                        <li>• 量化配方參數與物性的關係</li>
+                        <li>• 建立可累積的配方知識庫</li>
+                    </ul>
+                </div>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-bold text-yellow-700 mb-2">⚠️ 成功關鍵</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• 數據品質：測量準確、記錄完整</li>
+                        <li>• 數據量：初期至少 50 筆，越多越好</li>
+                        <li>• 持續迭代：實驗結果要回饋給模型</li>
+                        <li>• 領域知識：結合專家經驗調整模型</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact -->
         <section class="card bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
             <div class="text-center">
                 <h2 class="text-2xl font-bold mb-2">準備好開始了嗎？</h2>
-                <p class="opacity-90 mb-4">提供您的實驗數據，我們將協助建立專屬的配方預測模型</p>
-                <div class="flex justify-center space-x-4">
-                    <a href="mailto:contact@example.com" class="bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100">聯繫我們</a>
-                </div>
+                <p class="opacity-90 mb-4">提供您的歷史實驗數據，我們將協助建立專屬的配方預測模型</p>
             </div>
         </section>
     </main>
