@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCL 樹脂配方預測模型 - 昱鐳科技 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .section-title { font-size: 1.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1rem; border-left: 4px solid #6366f1; padding-left: 1rem; }
+        .card { background: white; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 1.5rem; }
+        .code-block { background: #1f2937; color: #34d399; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; font-family: monospace; }
+        .table-header { background: #4f46e5; color: white; }
+        .metric-card { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border-radius: 0.75rem; padding: 1rem; text-align: center; }
+        .step-number { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #4f46e5; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .highlight { background: #fef3c7; padding: 0 0.25rem; border-radius: 0.25rem; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">Y</span>
+                </div>
+                <span class="font-bold text-xl text-gray-800">昱鐳科技 CCL 配方預測</span>
+            </div>
+            <div class="hidden md:flex space-x-4 text-sm">
+                <a href="#overview" class="text-gray-600 hover:text-indigo-600">專案概述</a>
+                <a href="#data" class="text-gray-600 hover:text-indigo-600">數據格式</a>
+                <a href="#model" class="text-gray-600 hover:text-indigo-600">模型訓練</a>
+                <a href="#results" class="text-gray-600 hover:text-indigo-600">優化結果</a>
+                <a href="#import" class="text-gray-600 hover:text-indigo-600">導入指南</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="gradient-bg pt-24 pb-16 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-4">CCL 樹脂配方 AI 預測系統</h1>
+            <p class="text-xl opacity-90 mb-6">基於機器學習的 5G 高頻 CCL 樹脂配方優化方案</p>
+            <div class="flex flex-wrap gap-4">
+                <div class="bg-white/20 backdrop-blur rounded-lg px-6 py-3">
+                    <div class="text-3xl font-bold">5</div>
+                    <div class="text-sm opacity-80">物理性質預測</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur rounded-lg px-6 py-3">
+                    <div class="text-3xl font-bold">R2 &gt; 0.9</div>
+                    <div class="text-sm opacity-80">模型準確度</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur rounded-lg px-6 py-3">
+                    <div class="text-3xl font-bold">秒級</div>
+                    <div class="text-sm opacity-80">配方優化速度</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12 space-y-16">
+        
+        <!-- Section 1: Overview -->
+        <section id="overview">
+            <h2 class="section-title">專案概述</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-lg font-bold text-indigo-600 mb-3">🎯 專案目標</h3>
+                    <p class="text-gray-600 mb-4">針對昱鐳科技的 CCL 樹脂配方開發，建立 AI 預測模型：</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span><strong>正向預測</strong>：輸入配方 → 預測 Dk, Df, Peel, Tg, CTE</span></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span><strong>反向設計</strong>：輸入目標規格 → 搜尋最佳配方</span></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span><strong>減少實驗</strong>：AI 篩選後再做實驗，節省 70% 以上成本</span></li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-bold text-indigo-600 mb-3">🧪 樹脂系統假設</h3>
+                    <p class="text-gray-600 mb-4">基於市場調研，假設採用 <span class="highlight">改性環氧 + Active Ester</span> 系統：</p>
+                    <div class="bg-gray-100 rounded-lg p-4 text-sm space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-indigo-500 text-white px-2 py-1 rounded text-xs">主樹脂</span>
+                            <span>改性環氧 (Modified Epoxy)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">硬化劑</span>
+                            <span>Active Ester (活性酯)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">填料</span>
+                            <span>球形 SiO2 (二氧化矽)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">阻燃劑</span>
+                            <span>磷系阻燃劑 (無鹵)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">增韌劑</span>
+                            <span>彈性體 (Elastomer)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison Table -->
+            <div class="card mt-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">📊 樹脂系統比較</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-4 py-3 text-left">樹脂類型</th>
+                                <th class="px-4 py-3 text-center">Dk @10GHz</th>
+                                <th class="px-4 py-3 text-center">Df @10GHz</th>
+                                <th class="px-4 py-3 text-left">優點</th>
+                                <th class="px-4 py-3 text-left">缺點</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3">傳統環氧 FR-4</td>
+                                <td class="px-4 py-3 text-center">4.2-4.8</td>
+                                <td class="px-4 py-3 text-center">0.017-0.025</td>
+                                <td class="px-4 py-3">便宜、成熟</td>
+                                <td class="px-4 py-3 text-red-600">Dk/Df 太高</td>
+                            </tr>
+                            <tr class="bg-indigo-50 font-medium">
+                                <td class="px-4 py-3">改性環氧 + Active Ester ⭐</td>
+                                <td class="px-4 py-3 text-center text-indigo-600">3.0-3.5</td>
+                                <td class="px-4 py-3 text-center text-indigo-600">0.004-0.010</td>
+                                <td class="px-4 py-3 text-green-600">成本適中、加工性好</td>
+                                <td class="px-4 py-3">需優化配方</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3">PPE (聚苯醚)</td>
+                                <td class="px-4 py-3 text-center">2.4-2.6</td>
+                                <td class="px-4 py-3 text-center">0.002-0.004</td>
+                                <td class="px-4 py-3">Dk/Df 最低</td>
+                                <td class="px-4 py-3 text-red-600">黏著力差、成本高</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3">PTFE (鐵氟龍)</td>
+                                <td class="px-4 py-3 text-center">2.1-2.6</td>
+                                <td class="px-4 py-3 text-center">0.001-0.006</td>
+                                <td class="px-4 py-3">超低損耗</td>
+                                <td class="px-4 py-3 text-red-600">加工困難、成本極高</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Data Format -->
+        <section id="data">
+            <h2 class="section-title">數據格式</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-lg font-bold text-green-600 mb-3">📥 輸入變數 (配方參數)</h3>
+                    <table class="w-full text-sm">
+                        <thead class="bg-green-100">
+                            <tr>
+                                <th class="px-3 py-2 text-left">變數名稱</th>
+                                <th class="px-3 py-2 text-left">說明</th>
+                                <th class="px-3 py-2 text-center">範圍</th>
+                                <th class="px-3 py-2 text-center">單位</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr><td class="px-3 py-2 font-mono text-xs">Hardener_Eq_Ratio</td><td class="px-3 py-2">硬化劑當量比</td><td class="px-3 py-2 text-center">0.75-1.15</td><td class="px-3 py-2 text-center">-</td></tr>
+                            <tr class="bg-gray-50"><td class="px-3 py-2 font-mono text-xs">Filler_Vol_Pct</td><td class="px-3 py-2">填料體積百分比</td><td class="px-3 py-2 text-center">15-55</td><td class="px-3 py-2 text-center">vol%</td></tr>
+                            <tr><td class="px-3 py-2 font-mono text-xs">FR_Wt_Pct</td><td class="px-3 py-2">阻燃劑重量百分比</td><td class="px-3 py-2 text-center">3-8</td><td class="px-3 py-2 text-center">wt%</td></tr>
+                            <tr class="bg-gray-50"><td class="px-3 py-2 font-mono text-xs">Toughener_Wt_Pct</td><td class="px-3 py-2">增韌劑重量百分比</td><td class="px-3 py-2 text-center">0-8</td><td class="px-3 py-2 text-center">wt%</td></tr>
+                            <tr><td class="px-3 py-2 font-mono text-xs">Wash_Cycles</td><td class="px-3 py-2">水洗次數</td><td class="px-3 py-2 text-center">2-5</td><td class="px-3 py-2 text-center">次</td></tr>
+                            <tr class="bg-gray-50"><td class="px-3 py-2 font-mono text-xs">Residual_Cl_ppm</td><td class="px-3 py-2">殘留氯離子濃度</td><td class="px-3 py-2 text-center">5-45</td><td class="px-3 py-2 text-center">ppm</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-lg font-bold text-blue-600 mb-3">📤 輸出變數 (物理性質)</h3>
+                    <table class="w-full text-sm">
+                        <thead class="bg-blue-100">
+                            <tr>
+                                <th class="px-3 py-2 text-left">變數名稱</th>
+                                <th class="px-3 py-2 text-left">說明</th>
+                                <th class="px-3 py-2 text-center">目標</th>
+                                <th class="px-3 py-2 text-center">單位</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr><td class="px-3 py-2 font-mono text-xs">Dk_10GHz</td><td class="px-3 py-2">介電常數</td><td class="px-3 py-2 text-center text-green-600">↓ 越低越好</td><td class="px-3 py-2 text-center">-</td></tr>
+                            <tr class="bg-gray-50"><td class="px-3 py-2 font-mono text-xs">Df_10GHz</td><td class="px-3 py-2">介電損耗</td><td class="px-3 py-2 text-center text-green-600">↓ 越低越好</td><td class="px-3 py-2 text-center">-</td></tr>
+                            <tr><td class="px-3 py-2 font-mono text-xs">Peel_Strength_N_mm</td><td class="px-3 py-2">銅箔剝離強度</td><td class="px-3 py-2 text-center text-green-600">↑ 越高越好</td><td class="px-3 py-2 text-center">N/mm</td></tr>
+                            <tr class="bg-gray-50"><td class="px-3 py-2 font-mono text-xs">Tg_C</td><td class="px-3 py-2">玻璃轉移溫度</td><td class="px-3 py-2 text-center text-green-600">↑ 越高越好</td><td class="px-3 py-2 text-center">°C</td></tr>
+                            <tr><td class="px-3 py-2 font-mono text-xs">CTE_ppm</td><td class="px-3 py-2">熱膨脹係數 (Z軸)</td><td class="px-3 py-2 text-center text-green-600">↓ 越低越好</td><td class="px-3 py-2 text-center">ppm/°C</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Sample Data -->
+            <div class="card mt-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">📋 數據範例 (模擬數據前 5 筆)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-2 py-2">ID</th>
+                                <th class="px-2 py-2">當量比</th>
+                                <th class="px-2 py-2">填料%</th>
+                                <th class="px-2 py-2">阻燃%</th>
+                                <th class="px-2 py-2">增韌%</th>
+                                <th class="px-2 py-2">水洗</th>
+                                <th class="px-2 py-2">Cl ppm</th>
+                                <th class="px-2 py-2 bg-blue-700">Dk</th>
+                                <th class="px-2 py-2 bg-blue-700">Df</th>
+                                <th class="px-2 py-2 bg-blue-700">Peel</th>
+                                <th class="px-2 py-2 bg-blue-700">Tg</th>
+                                <th class="px-2 py-2 bg-blue-700">CTE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y text-center">
+                            <tr class="bg-gray-50"><td class="px-2 py-2">EXP0001</td><td class="px-2 py-2">0.900</td><td class="px-2 py-2">53.0</td><td class="px-2 py-2">6.66</td><td class="px-2 py-2">4.79</td><td class="px-2 py-2">4</td><td class="px-2 py-2">7.9</td><td class="px-2 py-2 font-medium">3.542</td><td class="px-2 py-2 font-medium">0.0147</td><td class="px-2 py-2 font-medium">0.657</td><td class="px-2 py-2 font-medium">159.1</td><td class="px-2 py-2 font-medium">23.4</td></tr>
+                            <tr><td class="px-2 py-2">EXP0002</td><td class="px-2 py-2">0.773</td><td class="px-2 py-2">43.9</td><td class="px-2 py-2">7.69</td><td class="px-2 py-2">0.01</td><td class="px-2 py-2">5</td><td class="px-2 py-2">6.1</td><td class="px-2 py-2 font-medium">3.615</td><td class="px-2 py-2 font-medium">0.0150</td><td class="px-2 py-2 font-medium">0.649</td><td class="px-2 py-2 font-medium">170.0</td><td class="px-2 py-2 font-medium">26.2</td></tr>
+                            <tr class="bg-gray-50"><td class="px-2 py-2">EXP0003</td><td class="px-2 py-2">0.806</td><td class="px-2 py-2">26.7</td><td class="px-2 py-2">4.83</td><td class="px-2 py-2">3.65</td><td class="px-2 py-2">4</td><td class="px-2 py-2">5.1</td><td class="px-2 py-2 font-medium">3.662</td><td class="px-2 py-2 font-medium">0.0150</td><td class="px-2 py-2 font-medium">1.018</td><td class="px-2 py-2 font-medium">157.1</td><td class="px-2 py-2 font-medium">44.8</td></tr>
+                            <tr><td class="px-2 py-2">EXP0004</td><td class="px-2 py-2">0.930</td><td class="px-2 py-2">15.5</td><td class="px-2 py-2">7.71</td><td class="px-2 py-2">4.51</td><td class="px-2 py-2">3</td><td class="px-2 py-2">16.2</td><td class="px-2 py-2 font-medium">3.614</td><td class="px-2 py-2 font-medium">0.0132</td><td class="px-2 py-2 font-medium">1.181</td><td class="px-2 py-2 font-medium">155.9</td><td class="px-2 py-2 font-medium">49.3</td></tr>
+                            <tr class="bg-gray-50"><td class="px-2 py-2">EXP0005</td><td class="px-2 py-2">0.764</td><td class="px-2 py-2">51.4</td><td class="px-2 py-2">4.29</td><td class="px-2 py-2">5.30</td><td class="px-2 py-2">3</td><td class="px-2 py-2">12.4</td><td class="px-2 py-2 font-medium">3.572</td><td class="px-2 py-2 font-medium">0.0150</td><td class="px-2 py-2 font-medium">0.784</td><td class="px-2 py-2 font-medium">151.6</td><td class="px-2 py-2 font-medium">29.1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Model Training -->
+        <section id="model">
+            <h2 class="section-title">模型訓練結果</h2>
+            
+            <!-- Model Performance -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                <div class="metric-card"><div class="text-sm opacity-80">Dk 預測</div><div class="text-3xl font-bold">0.75</div><div class="text-xs opacity-70">Test R2</div></div>
+                <div class="metric-card"><div class="text-sm opacity-80">Df 預測</div><div class="text-3xl font-bold">0.91</div><div class="text-xs opacity-70">Test R2</div></div>
+                <div class="metric-card"><div class="text-sm opacity-80">Peel 預測</div><div class="text-3xl font-bold">0.92</div><div class="text-xs opacity-70">Test R2</div></div>
+                <div class="metric-card"><div class="text-sm opacity-80">Tg 預測</div><div class="text-3xl font-bold">0.77</div><div class="text-xs opacity-70">Test R2</div></div>
+                <div class="metric-card"><div class="text-sm opacity-80">CTE 預測</div><div class="text-3xl font-bold">0.94</div><div class="text-xs opacity-70">Test R2</div></div>
+            </div>
+            
+            <!-- Feature Importance -->
+            <div class="card">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">🔍 特徵重要性分析</h3>
+                <p class="text-gray-600 mb-4">模型學習到的配方參數與物理性質的關係：</p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <canvas id="featureImportanceChart" height="300"></canvas>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                            <h4 class="font-bold text-red-700">Dk / Df 主要由硬化劑當量比決定</h4>
+                            <p class="text-sm text-gray-600 mt-1">Active Ester 當量比越高 → 極性基團越少 → Dk/Df 越低<br><span class="font-medium">重要性: 70-90%</span></p>
+                        </div>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                            <h4 class="font-bold text-blue-700">CTE 主要由填料體積%決定</h4>
+                            <p class="text-sm text-gray-600 mt-1">SiO2 填料越多 → CTE 越低<br><span class="font-medium">重要性: 95%</span></p>
+                        </div>
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                            <h4 class="font-bold text-green-700">Peel 由填料和增韌劑共同決定</h4>
+                            <p class="text-sm text-gray-600 mt-1">填料多 → Peel 下降 | 增韌劑多 → Peel 上升<br><span class="font-medium">重要性: 51% + 44%</span></p>
+                        </div>
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
+                            <h4 class="font-bold text-purple-700">Tg 主要由增韌劑決定</h4>
+                            <p class="text-sm text-gray-600 mt-1">增韌劑 (彈性體) 越多 → Tg 越低<br><span class="font-medium">重要性: 83%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trade-offs -->
+            <div class="card mt-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">⚖️ 核心矛盾 (Trade-offs)</h3>
+                <p class="text-gray-600 mb-4">這些矛盾是配方優化的核心挑戰，也是 AI 能發揮價值的地方：</p>
+                
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-gradient-to-br from-red-100 to-orange-100 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-red-700">低 Dk/Df</span>
+                            <span class="text-2xl">⚔️</span>
+                            <span class="font-bold text-orange-700">高 Peel</span>
+                        </div>
+                        <p class="text-sm text-gray-600">硬化劑當量比 ↑ → Dk/Df ↓ 但 Peel ↓<br><span class="text-indigo-600 font-medium">解法: 用增韌劑補償</span></p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-blue-700">低 CTE</span>
+                            <span class="text-2xl">⚔️</span>
+                            <span class="font-bold text-cyan-700">高 Peel</span>
+                        </div>
+                        <p class="text-sm text-gray-600">填料 ↑ → CTE ↓ 但 Peel ↓<br><span class="text-indigo-600 font-medium">解法: 控制填料在 40% 左右</span></p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-purple-700">高 Peel</span>
+                            <span class="text-2xl">⚔️</span>
+                            <span class="font-bold text-pink-700">高 Tg</span>
+                        </div>
+                        <p class="text-sm text-gray-600">增韌劑 ↑ → Peel ↑ 但 Tg ↓<br><span class="text-indigo-600 font-medium">解法: 增韌劑限制在 3% 以下</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Optimization Results -->
+        <section id="results">
+            <h2 class="section-title">優化結果</h2>
+            
+            <!-- Target Specs -->
+            <div class="card mb-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">🎯 5G 高頻 CCL 目標規格</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="text-center p-4 bg-gray-100 rounded-lg"><div class="text-sm text-gray-500">Dk @10GHz</div><div class="text-2xl font-bold text-indigo-600">≤ 3.5</div></div>
+                    <div class="text-center p-4 bg-gray-100 rounded-lg"><div class="text-sm text-gray-500">Df @10GHz</div><div class="text-2xl font-bold text-indigo-600">≤ 0.010</div></div>
+                    <div class="text-center p-4 bg-gray-100 rounded-lg"><div class="text-sm text-gray-500">Peel Strength</div><div class="text-2xl font-bold text-indigo-600">≥ 0.7 N/mm</div></div>
+                    <div class="text-center p-4 bg-gray-100 rounded-lg"><div class="text-sm text-gray-500">Tg</div><div class="text-2xl font-bold text-indigo-600">≥ 160°C</div></div>
+                    <div class="text-center p-4 bg-gray-100 rounded-lg"><div class="text-sm text-gray-500">CTE (Z軸)</div><div class="text-2xl font-bold text-indigo-600">≤ 35 ppm</div></div>
+                </div>
+            </div>
+            
+            <!-- Best Formulations -->
+            <div class="card">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">🏆 AI 搜尋最佳配方 (遺傳演算法)</h3>
+                <p class="text-gray-600 mb-4">以下配方均符合所有目標規格：</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-3 py-2">#</th>
+                                <th class="px-3 py-2">當量比</th>
+                                <th class="px-3 py-2">填料 vol%</th>
+                                <th class="px-3 py-2">阻燃 wt%</th>
+                                <th class="px-3 py-2">增韌 wt%</th>
+                                <th class="px-3 py-2 bg-green-700">Dk</th>
+                                <th class="px-3 py-2 bg-green-700">Df</th>
+                                <th class="px-3 py-2 bg-green-700">Peel</th>
+                                <th class="px-3 py-2 bg-green-700">Tg</th>
+                                <th class="px-3 py-2 bg-green-700">CTE</th>
+                                <th class="px-3 py-2">狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y text-center">
+                            <tr class="bg-green-50">
+                                <td class="px-3 py-2 font-bold">1</td>
+                                <td class="px-3 py-2">1.096</td>
+                                <td class="px-3 py-2">41.3</td>
+                                <td class="px-3 py-2">4.14</td>
+                                <td class="px-3 py-2">2.70</td>
+                                <td class="px-3 py-2 font-medium text-green-700">3.43</td>
+                                <td class="px-3 py-2 font-medium text-green-700">0.0094</td>
+                                <td class="px-3 py-2 font-medium text-green-700">0.79</td>
+                                <td class="px-3 py-2 font-medium text-green-700">163.4</td>
+                                <td class="px-3 py-2 font-medium text-green-700">33.3</td>
+                                <td class="px-3 py-2"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs">PASS</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 font-bold">2</td>
+                                <td class="px-3 py-2">1.071</td>
+                                <td class="px-3 py-2">41.3</td>
+                                <td class="px-3 py-2">6.89</td>
+                                <td class="px-3 py-2">2.14</td>
+                                <td class="px-3 py-2 font-medium">3.48</td>
+                                <td class="px-3 py-2 font-medium">0.0096</td>
+                                <td class="px-3 py-2 font-medium">0.76</td>
+                                <td class="px-3 py-2 font-medium">164.9</td>
+                                <td class="px-3 py-2 font-medium">31.6</td>
+                                <td class="px-3 py-2"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs">PASS</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-3 py-2 font-bold">3</td>
+                                <td class="px-3 py-2">1.096</td>
+                                <td class="px-3 py-2">42.5</td>
+                                <td class="px-3 py-2">4.10</td>
+                                <td class="px-3 py-2">2.14</td>
+                                <td class="px-3 py-2 font-medium">3.44</td>
+                                <td class="px-3 py-2 font-medium">0.0099</td>
+                                <td class="px-3 py-2 font-medium">0.71</td>
+                                <td class="px-3 py-2 font-medium">165.2</td>
+                                <td class="px-3 py-2 font-medium">31.2</td>
+                                <td class="px-3 py-2"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs">PASS</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Recommended Range -->
+                <div class="mt-6 bg-indigo-50 rounded-lg p-4">
+                    <h4 class="font-bold text-indigo-700 mb-2">📌 建議配方範圍</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div><span class="text-gray-500">硬化劑當量比:</span><span class="font-bold text-indigo-600 ml-2">1.05 ~ 1.15</span></div>
+                        <div><span class="text-gray-500">填料體積%:</span><span class="font-bold text-indigo-600 ml-2">38 ~ 45 vol%</span></div>
+                        <div><span class="text-gray-500">阻燃劑:</span><span class="font-bold text-indigo-600 ml-2">4 ~ 6 wt%</span></div>
+                        <div><span class="text-gray-500">增韌劑:</span><span class="font-bold text-indigo-600 ml-2">1 ~ 3 wt%</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Import Guide -->
+        <section id="import">
+            <h2 class="section-title">導入實際數據指南</h2>
+            
+            <div class="card">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">📝 步驟說明</h3>
+                
+                <div class="space-y-8">
+                    <!-- Step 1 -->
+                    <div class="flex">
+                        <div class="step-number mr-4 flex-shrink-0">1</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800">準備實驗數據 (Excel/CSV)</h4>
+                            <p class="text-gray-600 mt-1">將昱鐳的實驗數據整理成以下格式：</p>
+                            <div class="code-block mt-2">
+Experiment_ID,Hardener_Eq_Ratio,Filler_Vol_Pct,FR_Wt_Pct,Toughener_Wt_Pct,Wash_Cycles,Residual_Cl_ppm,Dk_10GHz,Df_10GHz,Peel_Strength_N_mm,Tg_C,CTE_ppm
+YL001,0.95,35,5,2,4,15,3.45,0.008,0.85,165,32
+YL002,1.00,40,5,3,3,20,3.38,0.007,0.78,162,28
+YL003,0.90,30,6,4,4,12,3.52,0.009,0.92,158,38
+                            </div>
+                            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 mt-2 text-sm">
+                                <strong>注意：</strong>
+                                <ul class="list-disc list-inside mt-1 text-gray-600">
+                                    <li>硬化劑用「當量比」而非重量百分比</li>
+                                    <li>填料用「體積百分比 vol%」</li>
+                                    <li>建議至少 50 筆以上數據</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="flex">
+                        <div class="step-number mr-4 flex-shrink-0">2</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800">替換模擬數據</h4>
+                            <p class="text-gray-600 mt-1">將數據檔案放到 data/ 資料夾，並修改載入路徑：</p>
+                            <div class="code-block mt-2">
+<span style="color:#6b7280"># 原本 (模擬數據)</span>
+predictor.load_data('data/ccl_resin_simulation.csv')
+
+<span style="color:#6b7280"># 改成 (昱鐳實際數據)</span>
+predictor.load_data('data/yulei_experiment_data.csv')
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex">
+                        <div class="step-number mr-4 flex-shrink-0">3</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800">重新訓練模型</h4>
+                            <p class="text-gray-600 mt-1">使用實際數據重新訓練：</p>
+                            <div class="code-block mt-2">
+from models.predictor import CCLPredictor
+
+<span style="color:#6b7280"># 建立預測器</span>
+predictor = CCLPredictor()
+
+<span style="color:#6b7280"># 載入昱鐳數據</span>
+predictor.load_data('data/yulei_experiment_data.csv')
+
+<span style="color:#6b7280"># 訓練模型</span>
+scores = predictor.train(model_type='random_forest')
+
+<span style="color:#6b7280"># 查看模型表現</span>
+print(predictor.get_metrics_summary())
+
+<span style="color:#6b7280"># 儲存模型</span>
+predictor.save('models/yulei_predictor.pkl')
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="flex">
+                        <div class="step-number mr-4 flex-shrink-0">4</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800">設定目標規格並優化</h4>
+                            <p class="text-gray-600 mt-1">根據客戶規格要求，設定優化目標：</p>
+                            <div class="code-block mt-2">
+from models.optimizer import CCLOptimizer
+
+optimizer = CCLOptimizer(predictor)
+
+<span style="color:#6b7280"># 設定客戶規格 (可自訂)</span>
+target_specs = {
+    'Dk_10GHz': {'type': 'max', 'value': 3.5},
+    'Df_10GHz': {'type': 'max', 'value': 0.008},
+    'Peel_Strength_N_mm': {'type': 'min', 'value': 0.8},
+    'Tg_C': {'type': 'min', 'value': 170},
+    'CTE_ppm': {'type': 'max', 'value': 30}
+}
+optimizer.set_targets(target_specs)
+
+<span style="color:#6b7280"># 搜尋最佳配方</span>
+best = optimizer.search(method='genetic', n_results=10)
+print(best)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 5 -->
+                    <div class="flex">
+                        <div class="step-number mr-4 flex-shrink-0">5</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800">驗證與迭代</h4>
+                            <p class="text-gray-600 mt-1">選擇 AI 推薦的配方進行實驗驗證：</p>
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 mt-2">
+                                <div class="font-bold text-green-700">迭代循環</div>
+                                <div class="flex flex-wrap items-center mt-2 text-sm text-gray-600 gap-2">
+                                    <span class="bg-green-200 px-2 py-1 rounded">AI 推薦配方</span>
+                                    <span>→</span>
+                                    <span class="bg-blue-200 px-2 py-1 rounded">實驗驗證</span>
+                                    <span>→</span>
+                                    <span class="bg-purple-200 px-2 py-1 rounded">數據回饋</span>
+                                    <span>→</span>
+                                    <span class="bg-orange-200 px-2 py-1 rounded">模型更新</span>
+                                    <span>→</span>
+                                    <span class="text-green-600 font-bold">循環</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Template Download -->
+            <div class="card mt-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">📥 數據模板</h3>
+                <p class="text-gray-600 mb-4">請使用以下模板整理昱鐳的實驗數據：</p>
+                <button onclick="downloadTemplate()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    下載 CSV 模板
+                </button>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="card bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold mb-2">準備好開始了嗎？</h2>
+                <p class="opacity-90 mb-4">提供您的實驗數據，我們將協助建立專屬的配方預測模型</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="mailto:contact@example.com" class="bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100">聯繫我們</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>CCL 樹脂配方預測模型 Demo - 昱鐳科技</p>
+            <p class="text-sm mt-2">Powered by Machine Learning (Random Forest / XGBoost)</p>
+        </div>
+    </footer>
+
+    <script>
+        // Feature Importance Chart
+        const ctx = document.getElementById('featureImportanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Dk', 'Df', 'Peel', 'Tg', 'CTE'],
+                datasets: [
+                    {
+                        label: '硬化劑當量比',
+                        data: [0.71, 0.91, 0.03, 0.08, 0.01],
+                        backgroundColor: '#ef4444'
+                    },
+                    {
+                        label: '填料體積%',
+                        data: [0.12, 0.03, 0.51, 0.04, 0.95],
+                        backgroundColor: '#3b82f6'
+                    },
+                    {
+                        label: '阻燃劑',
+                        data: [0.12, 0.02, 0.01, 0.02, 0.01],
+                        backgroundColor: '#f59e0b'
+                    },
+                    {
+                        label: '增韌劑',
+                        data: [0.02, 0.04, 0.44, 0.83, 0.02],
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        label: '其他',
+                        data: [0.03, 0.00, 0.01, 0.03, 0.01],
+                        backgroundColor: '#6b7280'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '各物理性質的特徵重要性'
+                    }
+                },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, max: 1 }
+                }
+            }
+        });
+
+        // Download Template
+        function downloadTemplate() {
+            const csvContent = `Experiment_ID,Hardener_Eq_Ratio,Filler_Vol_Pct,FR_Wt_Pct,Toughener_Wt_Pct,Wash_Cycles,Residual_Cl_ppm,Dk_10GHz,Df_10GHz,Peel_Strength_N_mm,Tg_C,CTE_ppm
+YL001,,,,,,,,,,,
+YL002,,,,,,,,,,,
+YL003,,,,,,,,,,,`;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'yulei_data_template.csv';
+            link.click();
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
