@@ -413,6 +413,103 @@
         <section id="import">
             <h2 class="section-title">導入實際數據指南</h2>
             
+            <!-- Important Notice -->
+            <div class="card mb-6 border-2 border-orange-400">
+                <h3 class="text-lg font-bold text-orange-600 mb-3">⚠️ 重要說明：數據格式可完全客製化</h3>
+                <p class="text-gray-700 mb-4">
+                    上述的數據欄位和樹脂系統都是<strong class="text-orange-600">假設範例</strong>。
+                    實際導入時，我們會根據昱鐳的真實數據進行調整：
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-orange-50 rounded-lg p-4">
+                        <h4 class="font-bold text-orange-700 mb-2">🔄 可調整項目</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>輸入欄位</strong>：可以是任何配方參數 (原料比例、製程條件等)</li>
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>輸出欄位</strong>：可以是任何物理性質 (不限於 Dk/Df/Peel/Tg/CTE)</li>
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>欄位名稱</strong>：可使用昱鐳內部的命名慣例</li>
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>單位</strong>：可根據實際量測單位調整</li>
+                            <li class="flex items-start"><span class="text-orange-500 mr-2">•</span><strong>樹脂系統</strong>：不限於環氧/Active Ester，任何樹脂系統皆可</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h4 class="font-bold text-blue-700 mb-2">📋 我們需要的資訊</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-start"><span class="text-blue-500 mr-2">1.</span><strong>現有數據範例</strong>：提供幾筆實驗數據 (Excel/CSV 皆可)</li>
+                            <li class="flex items-start"><span class="text-blue-500 mr-2">2.</span><strong>欄位說明</strong>：每個欄位代表什麼意義</li>
+                            <li class="flex items-start"><span class="text-blue-500 mr-2">3.</span><strong>預測目標</strong>：希望預測哪些物理性質</li>
+                            <li class="flex items-start"><span class="text-blue-500 mr-2">4.</span><strong>優化方向</strong>：各性質是越高越好還是越低越好</li>
+                            <li class="flex items-start"><span class="text-blue-500 mr-2">5.</span><strong>目標規格</strong>：客戶要求的規格範圍 (如有)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-4 bg-green-50 border-l-4 border-green-500 p-4">
+                    <p class="text-green-800">
+                        <strong>💡 流程：</strong>
+                        昱鐳提供原始數據 → 我們進行欄位對應和轉換 → 建立專屬預測模型 → 交付可用系統
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Example Mapping -->
+            <div class="card mb-6">
+                <h3 class="text-lg font-bold text-indigo-600 mb-3">🔗 欄位對應範例</h3>
+                <p class="text-gray-600 mb-4">假設昱鐳的數據欄位與我們的假設不同，對應方式如下：</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-4 py-2 text-left">昱鐳原始欄位 (範例)</th>
+                                <th class="px-4 py-2 text-center">→</th>
+                                <th class="px-4 py-2 text-left">模型欄位</th>
+                                <th class="px-4 py-2 text-left">說明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-2 font-mono text-xs">樹脂A_wt%</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Resin_A_Wt_Pct</td>
+                                <td class="px-4 py-2 text-gray-600">直接使用</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-xs">硬化劑_phr</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Hardener_phr</td>
+                                <td class="px-4 py-2 text-gray-600">可轉換為當量比或直接使用</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-2 font-mono text-xs">SiO2填充量</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Filler_Wt_Pct</td>
+                                <td class="px-4 py-2 text-gray-600">重量%或體積%皆可</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-xs">烘烤溫度</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Cure_Temp_C</td>
+                                <td class="px-4 py-2 text-gray-600">製程參數也可納入</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-2 font-mono text-xs">介電常數@1GHz</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Dk_1GHz</td>
+                                <td class="px-4 py-2 text-gray-600">頻率不同也可以</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-xs">銅箔接著力</td>
+                                <td class="px-4 py-2 text-center">→</td>
+                                <td class="px-4 py-2 font-mono text-xs">Peel_Strength</td>
+                                <td class="px-4 py-2 text-gray-600">單位可調整</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             <div class="card">
                 <h3 class="text-lg font-bold text-indigo-600 mb-3">📝 步驟說明</h3>
                 
